@@ -124,6 +124,47 @@ where
         Ok(summary)
     }
 
+    /// Build a string summary.
+    pub fn build_string<S: ToString>(self, value: S) -> Result<Summary, Error> {
+        let Self { tag } = self;
+
+        let v = value.to_string();
+        let summary = Summary {
+            value: vec![Value {
+                node_name: "".into(),
+                tag: tag.to_string(),
+                metadata: Some(SummaryMetadata {
+                    plugin_data: Some(PluginData {
+                        plugin_name: "text".into(),
+                        content: vec![],
+                    }),
+                    display_name: "".to_string(),
+                    summary_description: v.to_string(),
+                    data_class: 0,
+                }),
+                value: Some(ValueEnum::Tensor(TensorProto {
+                    dtype: DataType::DtString as i32,
+                    tensor_shape: Some([1]).as_ref().map(|shape| TensorShapeProto {
+                        dim: shape
+                            .as_ref()
+                            .iter()
+                            .cloned()
+                            .map(|sz| Dim {
+                                size: sz as i64,
+                                name: "".into(),
+                            })
+                            .collect::<Vec<_>>(),
+                        unknown_rank: false,
+                    }),
+                    version_number: 0,
+                    string_val: vec![v.into_bytes()],
+                    ..Default::default()
+                })),
+            }],
+        };
+        Ok(summary)
+    }
+
     /// Build a histogram summary.
     pub fn build_histogram<H, E>(self, histogram: H) -> Result<Summary, Error>
     where

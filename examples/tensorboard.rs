@@ -86,6 +86,12 @@ mod blocking_example {
                 writer.write_image("image", step, image)?;
             }
 
+            // string
+            {
+                let string = "Hello, World!".to_owned();
+                writer.write_text("string", step, string)?;
+            }
+
             thread::sleep(Duration::from_millis(100));
         }
 

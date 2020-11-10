@@ -222,6 +222,26 @@ where
         Ok(())
     }
 
+    /// Write a text item to the output
+    pub fn write_text<T, S>(
+        &mut self,
+        tag: T,
+        event_init: impl Into<EventInit>,
+        value: S,
+    ) -> Result<(), Error>
+    where
+        T: ToString,
+        S: ToString,
+    {
+        let summary = SummaryInit { tag }.build_string(value)?;
+        let event = event_init.into().build_with_summary(summary);
+        self.events_writer.send(event)?;
+        if self.auto_flush {
+            self.events_writer.flush()?;
+        }
+        Ok(())
+    }
+
     /// Write a histogram summary.
     pub fn write_histogram<T, H, E>(
         &mut self,
@@ -366,6 +386,26 @@ where
         T: ToString,
     {
         let summary = SummaryInit { tag }.build_scalar(value)?;
+        let event = event_init.into().build_with_summary(summary);
+        self.events_writer.send_async(event).await?;
+        if self.auto_flush {
+            self.events_writer.flush_async().await?;
+        }
+        Ok(())
+    }
+
+    /// Write a text summary asynchronously
+    pub async fn write_text_async<T, S>(
+        &mut self,
+        tag: T,
+        event_init: impl Into<EventInit>,
+        value: S,
+    ) -> Result<(), Error>
+    where
+        T: ToString,
+        S: ToString,
+    {
+        let summary = SummaryInit { tag }.build_string(value)?;
         let event = event_init.into().build_with_summary(summary);
         self.events_writer.send_async(event).await?;
         if self.auto_flush {

@@ -11,7 +11,9 @@ use crate::{
     protos::{
         event::What,
         summary::{value::Value as ValueEnum, Audio, Image, Value},
-        Event, HistogramProto, Summary, TensorProto,
+        summary_metadata::PluginData,
+        tensor_shape_proto::Dim,
+        DataType, Event, HistogramProto, Summary, SummaryMetadata, TensorProto, TensorShapeProto,
     },
     writer::{RecordWriter, RecordWriterInit},
 };

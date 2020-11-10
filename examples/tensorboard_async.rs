@@ -90,6 +90,12 @@ mod async_example {
                 writer.write_image_async("image", step, image).await?;
             }
 
+            // string
+            {
+                let string = "Hello, World!".to_owned();
+                writer.write_text_async("string", step, string).await?;
+            }
+
             async_std::task::sleep(Duration::from_millis(100)).await;
         }
 
