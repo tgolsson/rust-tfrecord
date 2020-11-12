@@ -144,18 +144,13 @@ where
                 }),
                 value: Some(ValueEnum::Tensor(TensorProto {
                     dtype: DataType::DtString as i32,
-                    tensor_shape: Some([1]).as_ref().map(|shape| TensorShapeProto {
-                        dim: shape
-                            .as_ref()
-                            .iter()
-                            .cloned()
-                            .map(|sz| Dim {
-                                size: sz as i64,
-                                name: "".into(),
-                            })
-                            .collect::<Vec<_>>(),
+                    tensor_shape: TensorShapeProto {
+                        dim: vec![Dim {
+                            size: 1,
+                            name: "".into(),
+                        }],
                         unknown_rank: false,
-                    }),
+                    },
                     version_number: 0,
                     string_val: vec![v.into_bytes()],
                     ..Default::default()
